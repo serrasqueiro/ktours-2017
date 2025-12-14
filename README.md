@@ -3,6 +3,11 @@
 This repository contains a Python script and assets to visualize the **final position** of the game  
 Caruana vs Kasparov, Saint Louis Blitz 2017 (Round 12.3, ECO B23).
 
+### The tournament itself
+
+Tournament is referenced here:
+- [(here)](https://www.365chess.com/tournaments/Saint_Louis_Blitz_2017_2017/42215) 365chess - Saint Lous Blitz 20217
+
 ## Files
 - `dump_svg_last.py` -> Python script that reads the PGN and generates a PNG of the last move.
 - `Caruana_vs_Kasparov_2017.pgn` -> PGN file with the full game.
