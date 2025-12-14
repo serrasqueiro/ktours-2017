@@ -1,5 +1,7 @@
-# dump_svg_all.py
-# Generate a minimalistic SVG file for every move in a PGN game.
+""" # dump_svg_all.py -- including variations.
+
+Generate SVGs for every move in a PGN game, including variation continuation.
+"""
 
 import os
 import chess
@@ -9,7 +11,7 @@ import chess.svg
 SHOW_COORDINATES = True
 
 def main():
-    pgn_path = "Caruana_vs_Kasparov_2017.pgn"
+    pgn_path = "365chess_games.pgn"  # Caruana_vs_Kasparov_2017.pgn is a soft-link to that
     out_dir = "svgs_all_moves"
     show_coords = SHOW_COORDINATES
     exported = script(pgn_path, out_dir, show_coords)
@@ -23,10 +25,9 @@ def script(pgn_path, out_dir, show_coords=False):
         out_dir=out_dir,
         base_name="move",
         size=400,
-        coordinates=show_coords,  # True: shows rank/file labels
+        coordinates=show_coords
     )
     return exported
-
 
 def ensure_dir(path):
     if os.path.isdir(path):
@@ -37,7 +38,6 @@ def ensure_dir(path):
 
 
 def svg_for_move(board, last_move=None, size=400, coordinates=False):
-    # Minimalistic SVG: no coordinates, no arrows, no labels
     return chess.svg.board(
         board=board,
         lastmove=last_move,
@@ -46,36 +46,49 @@ def svg_for_move(board, last_move=None, size=400, coordinates=False):
     )
 
 
-def dump_all_moves_to_svg(pgn_path, out_dir, base_name="move", size=400, coordinates=False):
+def dump_all_moves_to_svg(pgn_path, out_dir, base_name="move", size=400, coordinates=False, verbose=0):
+    print("Read:", pgn_path)
     ensure_dir(out_dir)
-    with open(pgn_path, "r", encoding="ascii") as fdin:
-        pname = fdin.readlines()[0].strip()
-        if pname in ("365chess_games.pgn",):
-            pgn_path = pname
     with open(pgn_path, "r", encoding="utf-8") as fdin:
-        print("Read:", pgn_path)
         game = chess.pgn.read_game(fdin)
     if game is None:
         raise ValueError("No game found in PGN file.")
     board = game.board()
     move_index = 0
-    # Initial position before any move
+    # Initial position
     svg_init = svg_for_move(board, last_move=None, size=size, coordinates=coordinates)
     init_name = f"{base_name}_{move_index:03d}.svg"
-    pname = os.path.join(out_dir, init_name)
-    with open(pname, "w", encoding="utf-8") as outf:
+    with open(os.path.join(out_dir, init_name), "w", encoding="utf-8") as outf:
         print("(Re-)creating:", out_dir)
         outf.write(svg_init)
-    # Iterate through all moves
+    # Export mainline moves
     for mv in game.mainline_moves():
-        print("Move:", mv)
+        if verbose > 0:
+            print("Move:", mv)
         board.push(mv)
         move_index += 1
         svg_data = svg_for_move(board, last_move=mv, size=size, coordinates=coordinates)
         fname = f"{base_name}_{move_index:03d}.svg"
         with open(os.path.join(out_dir, fname), "w", encoding="utf-8") as outf:
             outf.write(svg_data)
-    return move_index  # number of moves exported
+    # Export variation continuation if present
+    terminal = game.end()
+    if terminal.variations:
+        print("Found variation continuation; exporting hypothetical line...")
+        var_node = terminal.variations[0]
+        while var_node is not None:
+            mv = var_node.move
+            if mv is None:
+                break
+            print("Var move:", mv)
+            board.push(mv)
+            move_index += 1
+            svg_data = svg_for_move(board, last_move=mv, size=size, coordinates=coordinates)
+            fname = f"{base_name}_{move_index:03d}.svg"
+            with open(os.path.join(out_dir, fname), "w", encoding="utf-8") as outf:
+                outf.write(svg_data)
+            var_node = var_node.variations[0] if var_node.variations else None
+    return move_index
 
 
 if __name__ == "__main__":
