@@ -1,4 +1,4 @@
-# Caruana vs Kasparov – Saint Louis Blitz 2017
+# Caruana vs Kasparov -- Saint Louis Blitz 2017
 
 ## Video Reference
 - [YouTube broadcast of the game](https://www.youtube.com/watch?v=JxAg7RxruoU)  
@@ -40,3 +40,6 @@ Since PGN does not store times, reconstruct them from the video:
 - Kasparov's edge -> He kept a time advantage by relying on intuition.  
 - Caruana's struggle -> His precise style cost him seconds, and blitz magnifies that.  
 - Tempo analogy -> The clocks are like BPM markers in a live set, Kasparov kept the rhythm driving forward, while Caruana slowed down in the buildup.
+
+# Sources
+Refer to `new/document-word` in this repo.
