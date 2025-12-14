@@ -6,7 +6,7 @@ import chess
 import chess.pgn
 import chess.svg
 
-SHOW_COORDINATES = False
+SHOW_COORDINATES = True
 
 def main():
     pgn_path = "Caruana_vs_Kasparov_2017.pgn"
@@ -23,7 +23,7 @@ def script(pgn_path, out_dir, show_coords=False):
         out_dir=out_dir,
         base_name="move",
         size=400,
-        coordinates=show_coords,  # set True if you want rank/file labels,
+        coordinates=show_coords,  # True: shows rank/file labels
     )
     return exported
 
