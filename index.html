@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='UTF-8'>
+  <title>Kasparov vs Caruana – SVG Viewer</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; }
+    img { border: 1px solid #ccc; margin: 10px; }
+    .controls { margin: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Kasparov vs Caruana – Saint Louis Blitz 2017</h1>
+  <div class='controls'>
+    <button onclick='prevMove()'>Previous</button>
+    <button onclick='nextMove()'>Next</button>
+    <button onclick='toggleAutoPlay()'>Auto Play</button>
+    <p id='moveLabel'></p>
+  </div>
+  <div>
+    <img id='board' src='' alt='Chess board'>
+  </div>
+  <script>
+    const moves = ["svgs_all_moves/move_000.svg","svgs_all_moves/move_001.svg","svgs_all_moves/move_002.svg","svgs_all_moves/move_003.svg","svgs_all_moves/move_004.svg","svgs_all_moves/move_005.svg","svgs_all_moves/move_006.svg","svgs_all_moves/move_007.svg","svgs_all_moves/move_008.svg","svgs_all_moves/move_009.svg","svgs_all_moves/move_010.svg","svgs_all_moves/move_011.svg","svgs_all_moves/move_012.svg","svgs_all_moves/move_013.svg","svgs_all_moves/move_014.svg","svgs_all_moves/move_015.svg","svgs_all_moves/move_016.svg","svgs_all_moves/move_017.svg","svgs_all_moves/move_018.svg","svgs_all_moves/move_019.svg","svgs_all_moves/move_020.svg","svgs_all_moves/move_021.svg","svgs_all_moves/move_022.svg","svgs_all_moves/move_023.svg","svgs_all_moves/move_024.svg","svgs_all_moves/move_025.svg","svgs_all_moves/move_026.svg","svgs_all_moves/move_027.svg","svgs_all_moves/move_028.svg","svgs_all_moves/move_029.svg","svgs_all_moves/move_030.svg","svgs_all_moves/move_031.svg","svgs_all_moves/move_032.svg","svgs_all_moves/move_033.svg","svgs_all_moves/move_034.svg","svgs_all_moves/move_035.svg","svgs_all_moves/move_036.svg","svgs_all_moves/move_037.svg","svgs_all_moves/move_038.svg","svgs_all_moves/move_039.svg","svgs_all_moves/move_040.svg","svgs_all_moves/move_041.svg","svgs_all_moves/move_042.svg","svgs_all_moves/move_043.svg","svgs_all_moves/move_044.svg","svgs_all_moves/move_045.svg","svgs_all_moves/move_046.svg","svgs_all_moves/move_047.svg","svgs_all_moves/move_048.svg","svgs_all_moves/move_049.svg","svgs_all_moves/move_050.svg","svgs_all_moves/move_051.svg","svgs_all_moves/move_052.svg","svgs_all_moves/move_053.svg","svgs_all_moves/move_054.svg","svgs_all_moves/move_055.svg","svgs_all_moves/move_056.svg","svgs_all_moves/move_057.svg","svgs_all_moves/move_058.svg","svgs_all_moves/move_059.svg","svgs_all_moves/move_060.svg","svgs_all_moves/move_061.svg","svgs_all_moves/move_062.svg","svgs_all_moves/move_063.svg","svgs_all_moves/move_064.svg","svgs_all_moves/move_065.svg","svgs_all_moves/move_066.svg","svgs_all_moves/move_067.svg","svgs_all_moves/move_068.svg","svgs_all_moves/move_069.svg","svgs_all_moves/move_070.svg","svgs_all_moves/move_071.svg","svgs_all_moves/move_072.svg","svgs_all_moves/move_073.svg","svgs_all_moves/move_074.svg","svgs_all_moves/move_075.svg","svgs_all_moves/move_076.svg","svgs_all_moves/move_077.svg","svgs_all_moves/move_078.svg","svgs_all_moves/move_079.svg","svgs_all_moves/move_080.svg","svgs_all_moves/move_081.svg","svgs_all_moves/move_082.svg","svgs_all_moves/move_083.svg","svgs_all_moves/move_084.svg","svgs_all_moves/move_085.svg","svgs_all_moves/move_086.svg","svgs_all_moves/move_087.svg","svgs_all_moves/move_088.svg","svgs_all_moves/move_089.svg","svgs_all_moves/move_090.svg","svgs_all_moves/move_091.svg","svgs_all_moves/move_092.svg","svgs_all_moves/move_093.svg","svgs_all_moves/move_094.svg","svgs_all_moves/move_095.svg","svgs_all_moves/move_096.svg","svgs_all_moves/move_097.svg","svgs_all_moves/move_098.svg","svgs_all_moves/move_099.svg","svgs_all_moves/move_100.svg","svgs_all_moves/move_101.svg","svgs_all_moves/move_102.svg","svgs_all_moves/move_103.svg","svgs_all_moves/move_104.svg","svgs_all_moves/move_105.svg","svgs_all_moves/move_106.svg","svgs_all_moves/move_107.svg","svgs_all_moves/move_108.svg","svgs_all_moves/move_109.svg","svgs_all_moves/move_110.svg","svgs_all_moves/move_111.svg","svgs_all_moves/move_112.svg","svgs_all_moves/move_113.svg","svgs_all_moves/move_114.svg","svgs_all_moves/move_115.svg","svgs_all_moves/move_116.svg","svgs_all_moves/move_117.svg","svgs_all_moves/move_118.svg","svgs_all_moves/move_119.svg","svgs_all_moves/move_120.svg","svgs_all_moves/move_121.svg","svgs_all_moves/move_122.svg","svgs_all_moves/move_123.svg","svgs_all_moves/move_124.svg","svgs_all_moves/move_125.svg","svgs_all_moves/move_126.svg","svgs_all_moves/move_127.svg","svgs_all_moves/move_128.svg","svgs_all_moves/move_129.svg","svgs_all_moves/move_130.svg"];
+    let index = 0;
+    let autoPlayInterval = null;
+
+    function showMove(i) {
+      document.getElementById('board').src = moves[i];
+      document.getElementById('moveLabel').innerText = 'Move ' + i;
+    }
+
+    function prevMove() {
+      if (index > 0) { index--; showMove(index); }
+    }
+
+    function nextMove() {
+      if (index < moves.length - 1) { index++; showMove(index); }
+    }
+
+    function toggleAutoPlay() {
+      if (autoPlayInterval) {
+        clearInterval(autoPlayInterval);
+        autoPlayInterval = null;
+      } else {
+        autoPlayInterval = setInterval(() => {
+          if (index < moves.length - 1) {
+            index++;
+            showMove(index);
+          } else {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = null;
+          }
+        }, 2000); // advance every 2 seconds
+      }
+    }
+
+    // Initialize
+    showMove(index);
+  </script>
+</body>
+</html>
