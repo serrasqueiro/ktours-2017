@@ -1,3 +1,8 @@
+# NOTICE !
+Formerly this repo was at gist,
+- under `git@gist.github.com:7b086c8d62888934bb3ef6b9b0cc9a2e.git`,
+- now it is stored [(here)](https://github.com/serrasqueiro/ktours-2017) github _ktours-2017_
+
 ## Kasparov vs Caruana -- Saint Louis Blitz 2017
 
 This repository contains a Python script and assets to visualize the **final position** of the game  
